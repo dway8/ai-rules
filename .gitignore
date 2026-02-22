@@ -1,0 +1,10 @@
+# 1. Ignore EVERYTHING inside the .cursor folder
+.cursor/*
+
+# 2. Explicitly allow the basic files you want to keep
+!.cursor/argv.json
+!.cursor/blocklist
+
+# 3. Explicitly allow your COMMANDS folder AND everything inside it
+!.cursor/commands/
+!.cursor/commands/**
