@@ -15,6 +15,7 @@ You are an expert DevOps Agent. Follow these steps sequentially and strictly.
 
     - **Read `package.json`:** Look for scripts named `lint`, `lint:fix`, `format`, or `prettier`.
     - **Action:** Run that specific script using `npm run <script_name>`.
+    - **Monorepo Check:** If the workspace contains multiple `package.json` files with their own `lint`/`format` scripts (e.g. `api/`, `mobile/`), run lint and type-check in **every** sub-project, not just the first one found.
     - **Constraint:** Do NOT use `npx` (e.g., `npx eslint`) unless you explicitly see no scripts in `package.json`.
 
 2.  **TypeScript Check (CRITICAL):**

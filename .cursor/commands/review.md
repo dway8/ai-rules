@@ -15,6 +15,7 @@ Act as a **Principal Engineer**. I am about to commit this code. Your job is to 
     - Check `package.json` for a `format` or `lint:fix` script.
     - Run it via `npm run <script>` to ensure the code style matches the repo.
     - **Do not** use `npx` commands that might conflict with local dev dependencies.
+    - **Monorepo Check:** If the workspace contains multiple `package.json` files with their own `lint`/`format` scripts (e.g. `api/`, `mobile/`), run lint and type-check in **every** sub-project, not just the first one found.
 2.  **Leftovers:** Scan for `console.log`, `print()`, commented-out blocks, or `TODO` comments that should be resolved now.
 3.  **Naming:** Are variables named `data`, `item`, or `temp`? **Flag them.** They must be descriptive (e.g., `userProfile`, `activeItem`).
 4.  **Formatting:** Does this match the project's likely style (indentation, semi-colons)?
