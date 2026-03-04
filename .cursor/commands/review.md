@@ -11,11 +11,12 @@ Act as a **Principal Engineer**. I am about to commit this code. Your job is to 
 
 **Goal:** Catch the "lazy" mistakes I missed.
 
-1.  **Auto-Format:**
-    - Check `package.json` for a `format` or `lint:fix` script.
-    - Run it via `npm run <script>` to ensure the code style matches the repo.
-    - **Do not** use `npx` commands that might conflict with local dev dependencies.
-    - **Monorepo Check:** If the workspace contains multiple `package.json` files with their own `lint`/`format` scripts (e.g. `api/`, `mobile/`), run lint and type-check in **every** sub-project, not just the first one found.
+1.  **Auto-Format & Prettier (Mandatory):**
+    - Check `package.json` for **both** a linting script (e.g., `lint:fix`) AND a dedicated formatting script (e.g., `format`, `prettier`, or `prettier:write`).
+    - **Crucial Step:** You must run the Prettier/formatting script explicitly (e.g., `npm run format` or `npm run prettier --write .`) on the current files _before_ continuing the review. Do not assume `lint:fix` handles code formatting.
+    - Run the scripts via `npm run <script>` to ensure the code style matches the repo.
+    - **Do not** use `npx` commands that might conflict with local dev dependencies (unless no format script exists, then ask the user before running `npx prettier`).
+    - **Monorepo Check:** If the workspace contains multiple `package.json` files, run the lint AND format scripts in **every** relevant sub-project.
 2.  **Leftovers:** Scan for `console.log`, `print()`, commented-out blocks, or `TODO` comments that should be resolved now.
 3.  **Naming:** Are variables named `data`, `item`, or `temp`? **Flag them.** They must be descriptive (e.g., `userProfile`, `activeItem`).
 4.  **Formatting:** Does this match the project's likely style (indentation, semi-colons)?
