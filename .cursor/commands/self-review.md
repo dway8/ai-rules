@@ -1,52 +1,42 @@
 ---
-name: Self-Review (Staff Level)
-description: rigorously critiques the current file/selection for logic, security, and hygiene before committing.
+name: Self Review
+description: Review the current diff for correctness, safety, and obvious hygiene issues before committing.
+model: sonnet
 ---
 
-# Pre-Commit Code Review
+Act as a strict senior engineer reviewing the current changes before commit.
 
-Act as a **Principal Engineer**. I am about to commit this code. Your job is to stop me from pushing anything embarrassing, insecure, or broken.
+## Step 1: Repo-native checks
+Use the repo's own scripts where available.
 
-## Phase 1: The "Hygiene" Pass (Self-Correction)
+- Check `package.json` files relevant to the changed code
+- Run the appropriate format and/or lint scripts for the affected project(s)
+- Run targeted typecheck or build validation where relevant
+- Prefer repo scripts over ad hoc commands
 
-**Goal:** Catch the "lazy" mistakes I missed.
+Do not run the full world unless the repo structure or change scope makes that necessary.
 
-1.  **Auto-Format & Prettier (Mandatory):**
-    - Check `package.json` for **both** a linting script (e.g., `lint:fix`) AND a dedicated formatting script (e.g., `format`, `prettier`, or `prettier:write`).
-    - **Crucial Step:** You must run the Prettier/formatting script explicitly (e.g., `npm run format` or `npm run prettier --write .`) on the current files _before_ continuing the review. Do not assume `lint:fix` handles code formatting.
-    - Run the scripts via `npm run <script>` to ensure the code style matches the repo.
-    - **Do not** use `npx` commands that might conflict with local dev dependencies (unless no format script exists, then ask the user before running `npx prettier`).
-    - **Monorepo Check:** If the workspace contains multiple `package.json` files, run the lint AND format scripts in **every** relevant sub-project.
-2.  **Leftovers:** Scan for `console.log`, `print()`, commented-out blocks, or `TODO` comments that should be resolved now.
-3.  **Naming:** Are variables named `data`, `item`, or `temp`? **Flag them.** They must be descriptive (e.g., `userProfile`, `activeItem`).
-4.  **Formatting:** Does this match the project's likely style (indentation, semi-colons)?
-5.  **Types:** Am I using `any` (TS) or unstructured dictionaries (Python) where I should use a defined type/interface?
+## Step 2: Hygiene pass
+Check for:
+- `console.log`, debug prints, commented-out code, stale TODOs
+- obviously poor variable names like `data`, `item`, `temp` where clearer names are warranted
+- broken or unused imports introduced by the change
 
-## Phase 2: The "Shield" Pass (Security & Performance)
+## Step 3: Correctness and impact pass
+Check for:
+- changed function signatures without updated callers
+- missing edge-case handling
+- unsafe casts / loose typing
+- obvious security mistakes
+- obvious performance footguns introduced by the diff
 
-**Goal:** Ensure I am not introducing vulnerabilities.
+## Step 4: Report
+If the diff looks good, say:
 
-1.  **Security:**
-    - **Input:** Am I passing raw user input to a DB or DOM?
-    - **Secrets:** Did I hardcode an API key or token?
-    - **Authorization:** Did I forget to check `if (!user.isAdmin)`?
-2.  **Performance:**
-    - **Loops:** Am I doing database queries or expensive computations inside a loop? (O(n^2)).
-    - **Memoization:** Should this value be cached/memoized?
+`✅ LGTM`
+- one notable strength
 
-## Phase 3: The "Agent" Pass (Impact Analysis)
-
-**Goal:** Ensure I didn't break the rest of the app.
-
-1.  **Context Check:** If I changed a function signature, search the codebase: **Did I update the callers?**
-2.  **Import Check:** Check my imports. Do the files I'm importing actually export what I think they do?
-
-## Phase 4: The Report
-
-Output a strict report. **If the code is good, just say "✅ LGTM" and list 1 highlight.**
-
-**If issues exist:**
-
-- **🚨 Blocking:** (Security, Bugs, Broken Imports)
-- **🧹 Hygiene:** (Naming, Comments, Logs)
-- **💡 Refactor:** (Performance, Readability suggestions)
+If issues exist, report them under:
+- **🚨 Blocking**
+- **🧹 Hygiene**
+- **💡 Refactor**
