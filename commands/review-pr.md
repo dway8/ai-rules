@@ -110,7 +110,7 @@ Do not invent speculative problems.
 Prefer concrete, grounded feedback tied to the actual diff.
 
 ## Phase 5: Report
-Return findings in this exact structure:
+Return findings in the structure below. Omit any section that has no findings — do not pad with "N/A" or "none". Always include the **Summary Recommendation** section.
 
 ### 🛡️ Security & Safety
 - **Blocking:** ...
