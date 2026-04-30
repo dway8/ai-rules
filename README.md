@@ -2,16 +2,21 @@
 
 Personal Claude Code commands for planning, implementing, reviewing, and shipping changes.
 
-Symlink the contents of `commands/` into `~/.claude/commands/` to make them available globally.
+Symlink the contents of `commands/` into `~/.claude/commands/` (Claude Code) and/or `~/.cursor/commands/` (Cursor) to make them available globally.
 
 On macOS, from the repo root:
 
 ```bash
+# Claude Code
 mkdir -p ~/.claude/commands
 ln -s "$(pwd)/commands"/*.md ~/.claude/commands/
+
+# Cursor
+mkdir -p ~/.cursor/commands
+ln -s "$(pwd)/commands"/*.md ~/.cursor/commands/
 ```
 
-This links each command file individually, so existing commands in `~/.claude/commands/` are left alone. Pulling new versions from this repo updates them in place.
+This links each command file individually, so existing commands in either directory are left alone. Pulling new versions from this repo updates them in place.
 
 ## The standard flow
 
@@ -35,7 +40,7 @@ draft plan in plan mode
         └─ /review-loop      →  iterates until clean, then handles CI
 ```
 
-Outside this flow: **`/address-pr-comments <PR>`** — used sporadically when reviewers leave comments.
+Outside this flow: **`/address-pr-comments <PR>`** (originally from [https://github.com/timgent/claude-code-config](https://github.com/timgent/claude-code-config/blob/main/commands/address-pr-comments.md)) — used sporadically when reviewers leave comments.
 
 ## Commands
 
