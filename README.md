@@ -1,22 +1,20 @@
 # ai-rules
 
-Personal Claude Code commands for planning, implementing, reviewing, and shipping changes.
+Personal Claude Code commands and skills for planning, implementing, reviewing, and shipping changes.
 
-Symlink the contents of `commands/` into `~/.claude/commands/` (Claude Code) and/or `~/.cursor/commands/` (Cursor) to make them available globally.
+Each command is a thin shim over a skill. The slash command (`commands/<name>.md`) carries the model selection and entry point; the actual procedure lives in `skills/<name>/SKILL.md` and is loaded lazily.
 
-On macOS, from the repo root:
+Symlink each command file and each skill directory into `~/.claude/` so this repo's entries coexist with any of your own.
+
+From the repo root:
 
 ```bash
-# Claude Code
-mkdir -p ~/.claude/commands
+mkdir -p ~/.claude/commands ~/.claude/skills
 ln -s "$(pwd)/commands"/*.md ~/.claude/commands/
-
-# Cursor
-mkdir -p ~/.cursor/commands
-ln -s "$(pwd)/commands"/*.md ~/.cursor/commands/
+ln -s "$(pwd)/skills"/*/     ~/.claude/skills/
 ```
 
-This links each command file individually, so existing commands in either directory are left alone. Pulling new versions from this repo updates them in place.
+Each entry is linked individually, so any commands or skills you already have in `~/.claude/` are left alone. `git pull` updates existing entries in place; if you add a brand-new command or skill to this repo, re-run the relevant `ln -s` line to pick it up.
 
 ## The standard flow
 
@@ -55,7 +53,7 @@ Outside this flow: **`/address-pr-comments <PR>`** (originally from [https://git
 | `/review-pr`                       | opus   | Deep PR reviewer invoked by `/review-loop` via fresh context                 |
 | `/address-pr-comments <PR>`        | —      | Atomic per-comment fixes for unresolved review threads                       |
 
-See the individual files in `commands/` for the full prompt of each.
+See the individual files in `skills/<name>/SKILL.md` for the full prompt of each.
 
 ## Loops at a glance
 
