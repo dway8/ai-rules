@@ -8,7 +8,7 @@ DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
 ADDED=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
 REMOVED=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
 
-BLUE='\033[34m'; CYAN='\033[36m'; GREEN='\033[32m'; YELLOW='\033[33m'; RED='\033[31m'; RESET='\033[0m'
+BLUE=$'\033[34m'; CYAN=$'\033[36m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; RED=$'\033[31m'; RESET=$'\033[0m'
 
 if [ "$PCT" -ge 90 ]; then BAR_COLOR="$RED"
 elif [ "$PCT" -ge 70 ]; then BAR_COLOR="$YELLOW"
@@ -40,5 +40,5 @@ if [ "$ADDED" -gt 0 ] || [ "$REMOVED" -gt 0 ]; then
   DIFF=" | ${GREEN}+${ADDED}${RESET} ${RED}-${REMOVED}${RESET}"
 fi
 
-echo -e "${BLUE}📁 ${SHORT_DIR}${RESET}${BRANCH} | ${CYAN}[$MODEL]${RESET}"
-echo -e "${BAR_COLOR}${BAR}${RESET} ${PCT}% | ⏱️ ${DURATION}${DIFF}"
+printf "%s\n" "${BLUE}📁 ${SHORT_DIR}${RESET}${BRANCH} | ${CYAN}[$MODEL]${RESET}"
+printf "%s\n" "${BAR_COLOR}${BAR}${RESET} ${PCT}% | ⏱️  ${DURATION}${DIFF}"
