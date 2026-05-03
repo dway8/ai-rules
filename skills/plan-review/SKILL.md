@@ -12,10 +12,10 @@ This skill needs to edit the plan repeatedly and run shell commands that read it
 
 1. **Bail out if in plan mode.** If you are currently in plan mode, STOP and tell the user: *"This skill needs to write files and run shell commands, which plan mode blocks. Please exit plan mode (Shift+Tab) and re-run `/plan-review`."* Do NOT call `ExitPlanMode` yourself — that tool is for "approve this plan and start implementing," and users running `/plan-review` typically reject it (they're reviewing precisely because they don't want to implement yet). Let the user exit manually.
 2. **Choose a meaningful kebab-case filename** that describes what the plan does (e.g. `migrate-auth-middleware.md`, `add-event-page-mutations.md`). Do NOT reuse the auto-generated name from `~/.claude/plans/` if it's gibberish — rename it.
-3. **Move the plan into the repo at `<repo-root>/.claude/plans/<filename>.md`:**
-   - If a plan file exists at `~/.claude/plans/<auto-name>.md` from this conversation, `mv` it to the repo path under your chosen filename (creating `.claude/plans/` if needed).
+3. **Copy the plan into the repo at `<repo-root>/.claude/plans/<filename>.md`:**
+   - If a plan file exists at `~/.claude/plans/<auto-name>.md` from this conversation, `cp` it to the repo path under your chosen filename (creating `.claude/plans/` if needed). Use `cp`, not `mv` — Claude Code's sandbox typically blocks writes outside the working directory, so deleting the original will fail. The stale copy in `~/.claude/plans/` is harmless (Claude Code overwrites it next time).
    - Otherwise, write the plan from this conversation to that path. Include the original goal at the top of the file.
-4. From here on, the repo path is the single source of truth. All edits in later steps target it directly. Do not leave a stale copy under `~/.claude/plans/`.
+4. From here on, the repo path is the single source of truth. All edits in later steps target it directly.
 
 ## Step 2: Self-critique (up to 3 iterations)
 
