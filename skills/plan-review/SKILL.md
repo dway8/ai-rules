@@ -10,7 +10,7 @@ Review and refine the plan that was just written in this conversation. Do the fo
 
 This skill needs to edit the plan repeatedly and run shell commands that read it from a relative path. Plan mode blocks writes, and Claude Code's native plan mode saves plans under `~/.claude/plans/` with an auto-generated filename (often gibberish like `on-an-event-page-mutable-reddy.md`). Resolve both before doing any review work:
 
-1. **Exit plan mode if active.** If you are currently in plan mode, call `ExitPlanMode` with the current plan content. All subsequent steps require write access and shell commands.
+1. **Bail out if in plan mode.** If you are currently in plan mode, STOP and tell the user: *"This skill needs to write files and run shell commands, which plan mode blocks. Please exit plan mode (Shift+Tab) and re-run `/plan-review`."* Do NOT call `ExitPlanMode` yourself — that tool is for "approve this plan and start implementing," and users running `/plan-review` typically reject it (they're reviewing precisely because they don't want to implement yet). Let the user exit manually.
 2. **Choose a meaningful kebab-case filename** that describes what the plan does (e.g. `migrate-auth-middleware.md`, `add-event-page-mutations.md`). Do NOT reuse the auto-generated name from `~/.claude/plans/` if it's gibberish — rename it.
 3. **Move the plan into the repo at `<repo-root>/.claude/plans/<filename>.md`:**
    - If a plan file exists at `~/.claude/plans/<auto-name>.md` from this conversation, `mv` it to the repo path under your chosen filename (creating `.claude/plans/` if needed).
