@@ -63,6 +63,25 @@ See the individual files in `skills/<name>/SKILL.md` for the full prompt of each
 | Review / fix  | inside `/review-loop`  | 5 iterations | drive blocking issues to zero        |
 | CI fix        | inside `/review-loop`  | 2 attempts   | bounded retry for green CI           |
 
+## Status line
+
+`scripts/statusline.sh` is a two-line Claude Code status line: project + branch + model on top, context-usage bar + elapsed session time + lines added/removed (only when non-zero) underneath.
+
+![status line example](scripts/statusline-example.png)
+
+Symlink it into `~/.claude/` and reference it from `~/.claude/settings.json`:
+
+```bash
+ln -s "$(pwd)/scripts/statusline.sh" ~/.claude/statusline-command.sh
+```
+
+```json
+"statusLine": {
+  "type": "command",
+  "command": "bash ~/.claude/statusline-command.sh"
+}
+```
+
 ## Conventions
 
 - Plans live in `.claude/plans/<name>.md` at the repo root.
