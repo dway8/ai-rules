@@ -2,19 +2,20 @@
 
 Personal Claude Code commands and skills for planning, implementing, reviewing, and shipping changes.
 
-Each command is a thin shim over a skill. The slash command (`commands/<name>.md`) carries the model selection and entry point; the actual procedure lives in `skills/<name>/SKILL.md` and is loaded lazily.
+Each command is a thin shim over a skill. The slash command (`commands/<name>.md`) carries the model selection and entry point; the actual procedure lives in `skills/<name>/SKILL.md` and is loaded lazily. Some skills (like `review-pr`) fan out to specialized agents in `agents/<name>.md` that run in parallel.
 
-Symlink each command file and each skill directory into `~/.claude/` so this repo's entries coexist with any of your own.
+Symlink each command file, skill directory, and agent file into `~/.claude/` so this repo's entries coexist with any of your own.
 
 From the repo root:
 
 ```bash
-mkdir -p ~/.claude/commands ~/.claude/skills
+mkdir -p ~/.claude/commands ~/.claude/skills ~/.claude/agents
 ln -s "$(pwd)/commands"/*.md ~/.claude/commands/
 ln -s "$(pwd)/skills"/*/     ~/.claude/skills/
+ln -s "$(pwd)/agents"/*.md   ~/.claude/agents/
 ```
 
-Each entry is linked individually, so any commands or skills you already have in `~/.claude/` are left alone. `git pull` updates existing entries in place; if you add a brand-new command or skill to this repo, re-run the relevant `ln -s` line to pick it up.
+Each entry is linked individually, so any commands, skills, or agents you already have in `~/.claude/` are left alone. `git pull` updates existing entries in place; if you add a brand-new command, skill, or agent to this repo, re-run the relevant `ln -s` line to pick it up.
 
 ## The standard flow
 
