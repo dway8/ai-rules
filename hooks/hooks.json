@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -c 'if ((.prompt // \"\") | test(\"^\\\\s*/flow:implement(\\\\s|$)\")) then {\"hookSpecificOutput\": {\"hookEventName\": \"UserPromptSubmit\", \"additionalContext\": \"INSTRUCTION: The /flow:implement skill must always run inside a git worktree. Before invoking the skill, call EnterWorktree first to create an isolated worktree for this work. Do not run /flow:implement on a branch in the main repo checkout.\"}} else empty end'"
+          }
+        ]
+      }
+    ]
+  }
+}

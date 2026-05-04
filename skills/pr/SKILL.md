@@ -1,6 +1,6 @@
 ---
 name: pr
-description: Creates a Draft PR with safety checks, smart staging, and context-aware PR content. Use when the user runs `/pr` or asks to "open a PR", "create a draft PR", or "push this and open a PR".
+description: Creates a Draft PR with safety checks, smart staging, and context-aware PR content. Use when the user runs `/flow:pr` or asks to "open a PR", "create a draft PR", or "push this and open a PR".
 user-invocable: true
 ---
 

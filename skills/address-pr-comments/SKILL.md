@@ -1,6 +1,6 @@
 ---
 name: address-pr-comments
-description: Address PR comments by analyzing feedback and making atomic commits for each comment. Use when the user runs `/address-pr-comments` or asks to "address PR feedback", "respond to review comments", or "fix the comments on PR <n>".
+description: Address PR comments by analyzing feedback and making atomic commits for each comment. Use when the user runs `/flow:address-pr-comments` or asks to "address PR feedback", "respond to review comments", or "fix the comments on PR <n>".
 user-invocable: true
 ---
 
@@ -85,7 +85,7 @@ If no PR number or URL is provided, STOP and ask the user to provide one.
    For each straightforward comment:
 
    1. Make the necessary code changes
-   2. Run `/self-review` to verify the fix doesn't break lint, types, or obvious correctness. Fix any blocking issues it surfaces before committing.
+   2. Run `/flow:self-review` to verify the fix doesn't break lint, types, or obvious correctness. Fix any blocking issues it surfaces before committing.
    3. Create a commit with a descriptive message that references the comment:
 
       ```
@@ -112,7 +112,7 @@ If no PR number or URL is provided, STOP and ask the user to provide one.
       - Your recommendation marked as "(Recommended)"
       - Why you recommend that approach
    3. After user selection, implement the chosen approach
-   4. Run `/self-review` to verify the fix is sound, then create an atomic commit as described in step 4
+   4. Run `/flow:self-review` to verify the fix is sound, then create an atomic commit as described in step 4
    5. Reply to the comment with a brief summary of the chosen approach and what was done (as described in step 4.5)
 
 6. **Summary**

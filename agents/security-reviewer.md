@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: Reviews the current branch diff for security vulnerabilities — secrets, injection, exfiltration, authorization, dependency risk. Use when running a /review-pr fan-out or when explicitly asked for a security review.
+description: Reviews the current branch diff for security vulnerabilities — secrets, injection, exfiltration, authorization, dependency risk. Use when running a /flow:review-pr fan-out or when explicitly asked for a security review.
 tools: [Read, Grep, Glob, Bash]
 model: opus
 ---

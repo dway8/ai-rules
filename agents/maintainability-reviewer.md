@@ -1,6 +1,6 @@
 ---
 name: maintainability-reviewer
-description: Reviews the current branch diff for maintainability, architectural fit, and overall code health. Use when running a /review-pr fan-out or when explicitly asked for a maintainability review.
+description: Reviews the current branch diff for maintainability, architectural fit, and overall code health. Use when running a /flow:review-pr fan-out or when explicitly asked for a maintainability review.
 tools: [Read, Grep, Glob, Bash]
 model: opus
 ---

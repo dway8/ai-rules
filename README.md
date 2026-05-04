@@ -1,21 +1,38 @@
 # ai-rules
 
-Personal Claude Code commands and skills for planning, implementing, reviewing, and shipping changes.
+Plan-driven engineering workflow for Claude Code, packaged as a plugin (`flow`): plan → implement → review → ship.
 
-Each command is a thin shim over a skill. The slash command (`commands/<name>.md`) carries the model selection and entry point; the actual procedure lives in `skills/<name>/SKILL.md` and is loaded lazily. Some skills (like `review-pr`) fan out to specialized agents in `agents/<name>.md` that run in parallel.
+Each skill is a self-contained procedure under `skills/<name>/SKILL.md`. Some skills (like `review-pr`) fan out to specialized agents in `agents/<name>.md` that run in parallel. The plugin also bundles a hook that injects worktree guidance into `/flow:implement`.
 
-Symlink each command file, skill directory, and agent file into `~/.claude/` so this repo's entries coexist with any of your own.
+## Install
 
-From the repo root:
+Clone this repo, then load it as a Claude Code plugin. Two options:
+
+**One-shot for the current session:**
 
 ```bash
-mkdir -p ~/.claude/commands ~/.claude/skills ~/.claude/agents
-ln -s "$(pwd)/commands"/*.md ~/.claude/commands/
-ln -s "$(pwd)/skills"/*/     ~/.claude/skills/
-ln -s "$(pwd)/agents"/*.md   ~/.claude/agents/
+claude --plugin-dir /path/to/ai-rules
 ```
 
-Each entry is linked individually, so any commands, skills, or agents you already have in `~/.claude/` are left alone. `git pull` updates existing entries in place; if you add a brand-new command, skill, or agent to this repo, re-run the relevant `ln -s` line to pick it up.
+**Persistent: register as a local marketplace, then install once.**
+
+```bash
+# inside any Claude Code session
+/plugin marketplace add /path/to/ai-rules
+/plugin install flow
+```
+
+After installing, all skills are namespaced under `/flow:` — e.g. `/flow:plan-review`, `/flow:self-review`. Run `/flow` in the slash menu to see the full list.
+
+> **Migrating from the old symlink setup?** Remove the old per-file symlinks before enabling the plugin to avoid duplicate slash entries:
+>
+> ```bash
+> rm ~/.claude/commands/{address-pr-comments,implement,plan-review,pr,review-loop,review-pr,self-review,ship-loop}.md 2>/dev/null
+> rm ~/.claude/skills/{address-pr-comments,implement,plan-review,pr,review-loop,review-pr,self-review,ship-loop} 2>/dev/null
+> rm ~/.claude/agents/{correctness-reviewer,maintainability-reviewer,security-reviewer}.md 2>/dev/null
+> ```
+>
+> Also remove the equivalent `UserPromptSubmit` worktree hook from `~/.claude/settings.json` if you added it — the plugin ships its own copy.
 
 ## The standard flow
 
@@ -23,46 +40,48 @@ Each entry is linked individually, so any commands, skills, or agents you alread
 draft plan in plan mode
         │
         ▼
-   /plan-review     →  saves plan to .claude/plans/<name>.md
+   /flow:plan-review     →  saves plan to .claude/plans/<name>.md
         │
         ▼
-      /clear        (fresh context — recommended)
+      /clear             (fresh context — recommended)
         │
         ▼
-/implement <plan>   →  pre-flight, branch, step-by-step commits
+/flow:implement <plan>   →  pre-flight, branch, step-by-step commits
         │
         ▼
-   /ship-loop       (auto-invoked by /implement)
+   /flow:ship-loop       (auto-invoked by /flow:implement)
         │
-        ├─ /self-review
-        ├─ /pr               →  opens draft PR
-        └─ /review-loop      →  iterates until clean, then handles CI
+        ├─ /flow:self-review
+        ├─ /flow:pr               →  opens draft PR
+        └─ /flow:review-loop      →  iterates until clean, then handles CI
 ```
 
-Outside this flow: **`/address-pr-comments <PR>`** (originally from [https://github.com/timgent/claude-code-config](https://github.com/timgent/claude-code-config/blob/main/commands/address-pr-comments.md)) — used sporadically when reviewers leave comments.
+Outside this flow: **`/flow:address-pr-comments <PR>`** (originally adapted from [https://github.com/timgent/claude-code-config](https://github.com/timgent/claude-code-config/blob/main/commands/address-pr-comments.md)) — used sporadically when reviewers leave comments.
 
 ## Commands
 
 | Command                            | Model  | What it does                                                                 |
 | ---------------------------------- | ------ | ---------------------------------------------------------------------------- |
-| `/plan-review`                     | opus   | Critiques and refines a plan, saves it to `.claude/plans/`                   |
-| `/implement <plan>`                | sonnet | Pre-flight, branches, executes the plan with one commit per step             |
-| `/ship-loop`                       | sonnet | Orchestrator: `/self-review` → `/pr` → `/review-loop`                        |
-| `/self-review`                     | sonnet | Strict pre-commit review of the current diff (lint, hygiene, correctness)    |
-| `/pr`                              | sonnet | Opens a draft PR; pulls Linear + Figma context; Conventional Commits title   |
-| `/review-loop`                     | sonnet | Up to 5 iterations of fresh-context review and fix, then handles CI          |
-| `/review-pr`                       | opus   | Deep PR reviewer invoked by `/review-loop` via fresh context                 |
-| `/address-pr-comments <PR>`        | —      | Atomic per-comment fixes for unresolved review threads                       |
+| `/flow:plan-review`                | opus   | Critiques and refines a plan, saves it to `.claude/plans/`                   |
+| `/flow:implement <plan>`           | sonnet | Pre-flight, branches, executes the plan with one commit per step             |
+| `/flow:ship-loop`                  | sonnet | Orchestrator: `/flow:self-review` → `/flow:pr` → `/flow:review-loop`         |
+| `/flow:self-review`                | sonnet | Strict pre-commit review of the current diff (lint, hygiene, correctness)    |
+| `/flow:pr`                         | sonnet | Opens a draft PR; pulls Linear + Figma context; Conventional Commits title   |
+| `/flow:review-loop`                | sonnet | Up to 5 iterations of fresh-context review and fix, then handles CI          |
+| `/flow:review-pr`                  | opus   | Deep PR reviewer invoked by `/flow:review-loop` via fresh context            |
+| `/flow:address-pr-comments <PR>`   | —      | Atomic per-comment fixes for unresolved review threads                       |
+
+The `Model` column is enforced by `model:` frontmatter on each skill — invoking the command switches the model for that turn and reverts to the session model on the next prompt.
 
 See the individual files in `skills/<name>/SKILL.md` for the full prompt of each.
 
 ## Loops at a glance
 
-| Loop          | Where                  | Cap          | Purpose                              |
-| ------------- | ---------------------- | ------------ | ------------------------------------ |
-| Self-critique | inside `/plan-review`  | 3 iterations | tighten the plan before saving       |
-| Review / fix  | inside `/review-loop`  | 5 iterations | drive blocking issues to zero        |
-| CI fix        | inside `/review-loop`  | 2 attempts   | bounded retry for green CI           |
+| Loop          | Where                       | Cap          | Purpose                              |
+| ------------- | --------------------------- | ------------ | ------------------------------------ |
+| Self-critique | inside `/flow:plan-review`  | 3 iterations | tighten the plan before saving       |
+| Review / fix  | inside `/flow:review-loop`  | 5 iterations | drive blocking issues to zero        |
+| CI fix        | inside `/flow:review-loop`  | 2 attempts   | bounded retry for green CI           |
 
 ## Status line
 
@@ -70,7 +89,7 @@ See the individual files in `skills/<name>/SKILL.md` for the full prompt of each
 
 ![status line example](scripts/statusline-example.png)
 
-Symlink it into `~/.claude/` and reference it from `~/.claude/settings.json`:
+The status line is **not** part of the plugin — Claude Code's plugin `settings.json` doesn't accept a `statusLine` key. Wire it up manually instead:
 
 ```bash
 ln -s "$(pwd)/scripts/statusline.sh" ~/.claude/statusline-command.sh

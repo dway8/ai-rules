@@ -1,6 +1,6 @@
 ---
 name: review-loop
-description: Iteratively review and fix the PR with fresh-context reviewers, verify CI is green, then mark ready. Use when the user runs `/review-loop` or asks to "drive this PR to ready", "review and fix until clean", or "loop until CI green".
+description: Iteratively review and fix the PR with fresh-context reviewers, verify CI is green, then mark ready. Use when the user runs `/flow:review-loop` or asks to "drive this PR to ready", "review and fix until clean", or "loop until CI green".
 user-invocable: true
 ---
 
@@ -10,7 +10,7 @@ Run up to 5 iterations of the following cycle.
 
 Run a deep review with fresh context:
 
-- `claude --print "/review-pr"`
+- `claude --print "/flow:review-pr"`
 
 Collect the output.
 
@@ -36,7 +36,7 @@ If there are no blocking issues:
 
 - fix any remaining non-blocking issues marked **Fixed now**
 - run a final sanity pass with the built-in reviewer: `claude --print "/review"` — apply the same triage (fix blocking; fix non-blocking marked Fixed now)
-- run `/self-review`
+- run `/flow:self-review`
 - commit and push if needed
 - proceed to step 7 (CI verification)
 
@@ -53,7 +53,7 @@ Do not delegate the fixes to a fresh context.
 
 ## 4. Self-review before commit
 
-Run `/self-review`.
+Run `/flow:self-review`.
 If it finds blocking issues, fix them before continuing.
 
 ## 5. Commit and push
@@ -80,7 +80,7 @@ Once review iterations have settled with no blocking issues:
    - **Any other repo**: mark the PR ready with `gh pr ready` and stop.
 4. If checks fail:
    - inspect the failing job's logs (`gh run view <run-id> --log-failed`)
-   - if the failure looks fixable in code (lint, type, test), fix it, run `/self-review`, commit, push, then re-watch checks
+   - if the failure looks fixable in code (lint, type, test), fix it, run `/flow:self-review`, commit, push, then re-watch checks
    - cap at 2 fix attempts. If checks are still failing after 2 attempts, stop and surface the failures to the user — do NOT mark the PR ready
    - if the failure is infrastructural (flake, secrets, runner issues), do not attempt fixes — surface to the user
 

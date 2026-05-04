@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Execute an approved plan step by step, with small commits and targeted validation. Use when the user runs `/implement <plan>` or asks to "execute the plan", "implement the plan in .claude/plans/...", or "start working on this plan".
+description: Execute an approved plan step by step, with small commits and targeted validation. Use when the user runs `/flow:implement <plan>` or asks to "execute the plan", "implement the plan in .claude/plans/...", or "start working on this plan".
 user-invocable: true
 ---
 
@@ -50,7 +50,7 @@ Once all steps are complete:
 
 ## Step 5: Launch ship loop
 
-Run `/ship-loop`.
+Run `/flow:ship-loop`.
 
 ## Important rules
 

@@ -1,6 +1,6 @@
 ---
 name: correctness-reviewer
-description: Reviews the current branch diff for logic correctness and contract drift across layers. Use when running a /review-pr fan-out or when explicitly asked for a correctness review.
+description: Reviews the current branch diff for logic correctness and contract drift across layers. Use when running a /flow:review-pr fan-out or when explicitly asked for a correctness review.
 tools: [Read, Grep, Glob, Bash]
 model: opus
 ---

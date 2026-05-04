@@ -1,7 +1,8 @@
 ---
 name: plan-review
-description: Critique and strengthen a plan before implementation. Use when the user runs `/plan-review` or asks to "review my plan", "tighten the plan", "save and harden this plan", or finishes drafting a plan in plan mode.
+description: Critique and strengthen a plan before implementation. Use when the user runs `/flow:plan-review` or asks to "review my plan", "tighten the plan", "save and harden this plan", or finishes drafting a plan in plan mode.
 user-invocable: true
+model: opus
 ---
 
 Review and refine the plan that was just written in this conversation. Do the following steps sequentially. After each step, report what you did.
@@ -10,7 +11,7 @@ Review and refine the plan that was just written in this conversation. Do the fo
 
 This skill needs to edit the plan repeatedly and run shell commands that read it from a relative path. Plan mode blocks writes, and Claude Code's native plan mode saves plans under `~/.claude/plans/` with an auto-generated filename (often gibberish like `on-an-event-page-mutable-reddy.md`). Resolve both before doing any review work:
 
-1. **Bail out if in plan mode.** If you are currently in plan mode, STOP and tell the user: *"This skill needs to write files and run shell commands, which plan mode blocks. Please exit plan mode (Shift+Tab) and re-run `/plan-review`."* Do NOT call `ExitPlanMode` yourself — that tool is for "approve this plan and start implementing," and users running `/plan-review` typically reject it (they're reviewing precisely because they don't want to implement yet). Let the user exit manually.
+1. **Bail out if in plan mode.** If you are currently in plan mode, STOP and tell the user: *"This skill needs to write files and run shell commands, which plan mode blocks. Please exit plan mode (Shift+Tab) and re-run `/flow:plan-review`."* Do NOT call `ExitPlanMode` yourself — that tool is for "approve this plan and start implementing," and users running `/flow:plan-review` typically reject it (they're reviewing precisely because they don't want to implement yet). Let the user exit manually.
 2. **Choose a meaningful kebab-case filename** that describes what the plan does (e.g. `migrate-auth-middleware.md`, `add-event-page-mutations.md`). Do NOT reuse the auto-generated name from `~/.claude/plans/` if it's gibberish — rename it.
 3. **Copy the plan into the repo at `<repo-root>/.claude/plans/<filename>.md`:**
    - If a plan file exists at `~/.claude/plans/<auto-name>.md` from this conversation, `cp` it to the repo path under your chosen filename (creating `.claude/plans/` if needed). Use `cp`, not `mv` — Claude Code's sandbox typically blocks writes outside the working directory, so deleting the original will fail. The stale copy in `~/.claude/plans/` is harmless (Claude Code overwrites it next time).
@@ -66,8 +67,8 @@ If critical issues remain, fix them in the plan file or report them clearly.
 
 ## Step 7: Hand off
 
-Tell the user the exact filename to pass into `/implement`.
-Recommend they run `/clear` before `/implement` — the plan file is the contract, and a fresh context catches any gaps in what the plan actually specifies.
+Tell the user the exact filename to pass into `/flow:implement`.
+Recommend they run `/clear` before `/flow:implement` — the plan file is the contract, and a fresh context catches any gaps in what the plan actually specifies.
 
 ## Important rules
 

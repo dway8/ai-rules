@@ -1,10 +1,11 @@
 ---
 name: review-pr
-description: Performs a deep review of the current branch diff via three specialized reviewers running in parallel — security, correctness, maintainability. Use when the user runs `/review-pr` or asks to "do a staff-level review", "review this PR thoroughly", or "check the diff for blocking issues".
+description: Performs a deep review of the current branch diff via three specialized reviewers running in parallel — security, correctness, maintainability. Use when the user runs `/flow:review-pr` or asks to "do a staff-level review", "review this PR thoroughly", or "check the diff for blocking issues".
 user-invocable: true
+model: opus
 ---
 
-# /review-pr — multi-reviewer fan-out
+# /flow:review-pr — multi-reviewer fan-out
 
 Review the diff between `main` (or `master`) and the current `HEAD` by launching three specialized reviewers in parallel, then consolidate their reports.
 

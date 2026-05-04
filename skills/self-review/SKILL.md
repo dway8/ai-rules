@@ -1,6 +1,6 @@
 ---
 name: self-review
-description: Review the current diff for correctness, safety, and obvious hygiene issues before committing. Use when the user runs `/self-review` or asks to "check this before commit", "do a quick pre-commit review", or "lint and sanity check the diff".
+description: Review the current diff for correctness, safety, and obvious hygiene issues before committing. Use when the user runs `/flow:self-review` or asks to "check this before commit", "do a quick pre-commit review", or "lint and sanity check the diff".
 user-invocable: true
 ---
 

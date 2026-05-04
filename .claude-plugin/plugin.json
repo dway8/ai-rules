@@ -1,0 +1,8 @@
+{
+  "name": "flow",
+  "description": "Plan-driven engineering workflow for Claude Code: plan → implement → review → ship.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Diane Maniere"
+  }
+}
