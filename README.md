@@ -6,20 +6,12 @@ Each skill is a self-contained procedure under `skills/<name>/SKILL.md`. Some sk
 
 ## Install
 
-Clone this repo, then load it as a Claude Code plugin. Two options:
+Clone this repo, then inside any Claude Code session register it as a local marketplace and install the plugin:
 
-**One-shot for the current session:**
-
-```bash
-claude --plugin-dir /path/to/ai-rules
 ```
-
-**Persistent: register as a local marketplace, then install once.**
-
-```bash
-# inside any Claude Code session
 /plugin marketplace add /path/to/ai-rules
 /plugin install flow
+/reload-plugins
 ```
 
 After installing, all skills are namespaced under `/flow:` — e.g. `/flow:plan-review`, `/flow:self-review`. Run `/flow` in the slash menu to see the full list.

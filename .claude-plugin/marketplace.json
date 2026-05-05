@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ai-rules",
+  "description": "Local marketplace for the flow plugin: plan-driven engineering workflow for Claude Code.",
+  "owner": {
+    "name": "Diane Maniere"
+  },
+  "plugins": [
+    {
+      "name": "flow",
+      "description": "Plan-driven engineering workflow for Claude Code: plan -> implement -> review -> ship.",
+      "author": {
+        "name": "Diane Maniere"
+      },
+      "category": "development",
+      "source": "./"
+    }
+  ]
+}
